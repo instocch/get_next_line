@@ -12,15 +12,6 @@
 
 #include "get_next_line.h"
 
-char	ft_join(char *buffer, char *line)
-{
-	char	*tmp;	
-
-	tmp = ft_strjoin(buffer, line);
-	free(buffer);
-	return (tmp);
-}
-
 char	*ft_next(char *buffer)
 {
 	int		i;
@@ -28,16 +19,18 @@ char	*ft_next(char *buffer)
 	char	*line;
 
 	i = 0;
-	if (!buffer)
-		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
+    if (!buffer[i])
+    {
+        free(buffer);
+        return (NULL);
+    }
 	line = ft_calloc((ft_strlen(buffer)) - i + 1, sizeof(char));
+    i++;
 	j = 0;
-	while (buffer != '\0')
-	{
+	while (buffer[i] != '\0')
 		line[j++] = buffer[i++];
-	}
 	line[j] = '\0';
 	free (buffer);
 	return (line);
@@ -60,8 +53,12 @@ char	*ft_line(char *buffer)
 		line[i] = buffer[i];
 		i++;
 	}
-	if (buffer[i] && buffer[i] == '\n')
-		line[i++] = '\n';
+	if (buffer[i] == '\n')
+    {
+        line[i] = buffer[i];
+        i++;
+    }
+    line[i] = '\0';
 	return (line);
 }
 
@@ -70,37 +67,40 @@ char	*ft_read(int fd, char *buffer)
 	int		read_bytes;
 	char	*line;
 
-	if (!buffer)
-		buffer = ft_calloc (1, 1);
 	line = ft_calloc(BUFFER_SIZE + 1, sizeof (char));
 	read_bytes = 1;
-	while (read_bytes > 0)
+	while (!ft_strchr(buffer, '\n') && read_bytes != 0)
 	{
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
 		if (read_bytes == -1)
 		{	
-			free (buffer);
-			return (NULL);
+			free (line);
+			return (buffer);
 		}
 		line[read_bytes] = '\0';
-		buffer = ft_join(buffer, line);
-		if (ft_strchr(line, '\n'))
-			break ;
+		buffer = ft_strjoin(buffer, line);
+		//if (ft_strchr(line, '\n'))
+			//break ;
 	}
-	free(line);
+    free (line);
+	if (buffer[0] == '\0')
+    {
+        free (buffer);
+        return (0);
+    }
 	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*buffer;
-	char	*line;
-
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	char static	*buffer;
+	char	    *line;
+    
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = ft_read(fd, buffer);
 	if (!buffer)
-		return (NULL);
+        return (NULL);
 	line = ft_line(buffer);
 	buffer = ft_next(buffer);
 	return (line);
