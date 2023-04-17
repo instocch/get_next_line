@@ -12,6 +12,8 @@
 
 #include "get_next_line.h"
 
+#include <stdio.h>
+
 char	*ft_next(char *buffer)
 {
 	int		i;
@@ -22,17 +24,15 @@ char	*ft_next(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
     if (!buffer[i])
-    {
-        free(buffer);
         return (NULL);
-    }
-	line = ft_calloc((ft_strlen(buffer)) - i + 1, sizeof(char));
+	line = (char *)malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
+	if (!line)
+		return (NULL);
     i++;
 	j = 0;
 	while (buffer[i] != '\0')
 		line[j++] = buffer[i++];
 	line[j] = '\0';
-	free (buffer);
 	return (line);
 }
 
@@ -46,7 +46,7 @@ char	*ft_line(char *buffer)
 		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	line = ft_calloc(i + 2, sizeof (char));
+	line = (char *)malloc(i + 2);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
@@ -67,8 +67,9 @@ char	*ft_read(int fd, char *buffer)
 	int		read_bytes;
 	char	*line;
 
-	line = ft_calloc(BUFFER_SIZE + 1, sizeof (char));
+	line = (char *)malloc(BUFFER_SIZE + 1);
 	read_bytes = 1;
+	line = ft_strjoin(line, buffer);
 	while (!ft_strchr(buffer, '\n') && read_bytes != 0)
 	{
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
@@ -77,31 +78,50 @@ char	*ft_read(int fd, char *buffer)
 			free (line);
 			return (buffer);
 		}
-		line[read_bytes] = '\0';
-		buffer = ft_strjoin(buffer, line);
-		//if (ft_strchr(line, '\n'))
-			//break ;
+		line[ft_strlen(line)] = '\0';
+		line = ft_strjoin(line, buffer);
+	// printf("!!!!!!!%s\n\n", buffer);
 	}
-    free (line);
-	if (buffer[0] == '\0')
-    {
-        free (buffer);
+	if (line[0] == '\0')
         return (0);
-    }
-	return (buffer);
+	return (line);
 }
+
+
 
 char	*get_next_line(int fd)
 {
-	char static	*buffer;
+	char static	buffer[BUFFER_SIZE];
 	char	    *line;
+	char		*ptr;
     
+	ptr = buffer;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = ft_read(fd, buffer);
-	if (!buffer)
+	ptr = ft_read(fd, ptr);
+
+	if (!ptr)
         return (NULL);
-	line = ft_line(buffer);
-	buffer = ft_next(buffer);
+	line = ft_line(ptr);
+	ptr = ft_next(ptr);
+	int i = 0;
+	while (ptr[i])
+	{
+		buffer[i] = ptr[i];
+		i++;
+	}
+	buffer[i] = '\0';
 	return (line);
+}
+
+
+int main()
+{
+	int fd;
+	fd = open("./test1", 0);
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	return (0);
 }
