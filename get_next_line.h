@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstocche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mstocche <mstocche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:32:23 by mstocche          #+#    #+#             */
-/*   Updated: 2023/04/13 16:52:55 by mstocche         ###   ########.fr       */
+/*   Updated: 2023/04/20 12:43:37 by mstocche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 char	*get_next_line(int fd);
 int		ft_strlen(const char *str);
 char	*ft_strjoin(char *s1, char *s2);
-char	*ft_strchr(char *s, int c);
-void	*ft_calloc(size_t count, size_t size);
-void	ft_bzero(void *s, size_t n);
+int	    in_str(char *s, int c);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstocche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mstocche <mstocche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:01:44 by mstocche          #+#    #+#             */
-/*   Updated: 2023/04/13 16:56:55 by mstocche         ###   ########.fr       */
+/*   Updated: 2023/04/20 14:44:53 by mstocche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_strlen(const char *str)
 	return (i);
 }
 
-char    *ft_strchr(char *s, int c)
+int    in_str(char *s, int c)
 {
     int    i;
 
@@ -35,12 +35,10 @@ char    *ft_strchr(char *s, int c)
     while (s[i] != '\0')
     {
         if (s[i] == (char) c)
-            return ((char *)(s + i));
+            return (1);
         i++;
     }
-    if (c == '\0')
-        return ((char *)(s + i));
-    return (NULL);
+    return (0);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -56,17 +54,11 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (s1[i])
-	{
-		buffer[j++] = s1[i];
-		i++;
-	}
+	while (s1[i] != '\0')
+		buffer[j++] = s1[i++];
 	i = 0;
-	while (s2[i])
-	{
-		buffer[j++] = s2[i];
-		i++;
-	}
+	while (s2[i] != '\0')
+		buffer[j++] = s2[i++];
 	buffer[j] = '\0';
 	free(s1);
 	return (buffer);

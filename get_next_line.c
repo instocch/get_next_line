@@ -20,19 +20,24 @@ char	*ft_next(char *buffer)
 	int		j;
 	char	*line;
 
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-    if (!buffer[i])
+    if (buffer[0] == '\0')
+    {
+        free(buffer);
         return (NULL);
+    }
+    i = 0;
+	while (buffer[i] != '\0' && buffer[i] != '\n')
+		i++;
 	line = (char *)malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
 	if (!line)
 		return (NULL);
-    i++;
+    if (buffer[i] != '\0')
+        i++;
 	j = 0;
 	while (buffer[i] != '\0')
 		line[j++] = buffer[i++];
 	line[j] = '\0';
+    free(buffer);
 	return (line);
 }
 
@@ -42,13 +47,13 @@ char	*ft_line(char *buffer)
 	char	*line;
 
 	i = 0;
-	if (!buffer)
+	if (buffer[0] == '\0')
 		return (NULL);
-	while (buffer[i] && buffer[i] != '\n')
+	while (buffer[i] != '\0' && buffer[i] != '\n')
 		i++;
-	line = (char *)malloc(i + 2);
+	line = (char *)malloc(sizeof(char) * (i + 2));
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (buffer[i] != '\0' && buffer[i] != '\n')
 	{
 		line[i] = buffer[i];
 		i++;
@@ -62,66 +67,76 @@ char	*ft_line(char *buffer)
 	return (line);
 }
 
-char	*ft_read(int fd, char *buffer)
+char	*ft_read(int fd, char *line)
 {
 	int		read_bytes;
-	char	*line;
+	char *buffer;
 
-	line = (char *)malloc(BUFFER_SIZE + 1);
+	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+    if (!buffer) return NULL;
+    buffer[0] = '\0';
 	read_bytes = 1;
-	line = ft_strjoin(line, buffer);
-	while (!ft_strchr(buffer, '\n') && read_bytes != 0)
+	while (!in_str(buffer, '\n') && (read_bytes = read(fd, buffer, BUFFER_SIZE)) != 0)
 	{
-		read_bytes = read(fd, buffer, BUFFER_SIZE);
 		if (read_bytes == -1)
-		{	
-			free (line);
-			return (buffer);
+		{
+            line[0] = '\0';
+            free(buffer);
+			return (line);
 		}
-		line[ft_strlen(line)] = '\0';
+        buffer[read_bytes] = '\0';
 		line = ft_strjoin(line, buffer);
-	// printf("!!!!!!!%s\n\n", buffer);
 	}
-	if (line[0] == '\0')
-        return (0);
+    free(buffer);
 	return (line);
 }
-
-
 
 char	*get_next_line(int fd)
 {
-	char static	buffer[BUFFER_SIZE];
-	char	    *line;
-	char		*ptr;
-    
-	ptr = buffer;
+	static char *line;
+    char *result;
+
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	ptr = ft_read(fd, ptr);
-
-	if (!ptr)
-        return (NULL);
-	line = ft_line(ptr);
-	ptr = ft_next(ptr);
-	int i = 0;
-	while (ptr[i])
-	{
-		buffer[i] = ptr[i];
-		i++;
-	}
-	buffer[i] = '\0';
-	return (line);
+    if (!line)
+    {
+        line = (char *)malloc(sizeof(char *) * 1);
+        if (!line)
+            return (NULL);
+        line[0] = '\0';
+    }
+	line = ft_read(fd, line);
+	result = ft_line(line);
+	line = ft_next(line);
+	return (result);
 }
-
-
+/*
 int main()
 {
-	int fd;
-	fd = open("./test1", 0);
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
+    get_next_line(999999);
+}
+*/
+
+/*
+int main()
+{
+    int fd;
+    fd = open("./gnlTester/files/big_line_no_nl", O_RDONLY);
+    char *stringa;
+    stringa = get_next_line(fd);
+    while (stringa){
+        printf("%s", stringa);
+        free(stringa);
+        stringa = get_next_line(fd);
+    }
+    stringa = get_next_line(fd);
+    if (stringa == NULL) printf("NULLO\n");
+    printf("%s", stringa);
+    stringa = get_next_line(fd);
+    if (stringa == NULL) printf("NULLO\n");
+    printf("%s", stringa);
+        //free(stringa);
+
 	return (0);
 }
+*/
