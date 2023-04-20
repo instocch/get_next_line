@@ -6,7 +6,7 @@
 /*   By: mstocche <mstocche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:32:23 by mstocche          #+#    #+#             */
-/*   Updated: 2023/04/20 12:43:37 by mstocche         ###   ########.fr       */
+/*   Updated: 2023/04/20 18:26:00 by mstocche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@
 char	*get_next_line(int fd);
 int		ft_strlen(const char *str);
 char	*ft_strjoin(char *s1, char *s2);
-int	    in_str(char *s, int c);
+int		in_str(char *s, int c);
 
 #endif

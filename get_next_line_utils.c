@@ -6,12 +6,11 @@
 /*   By: mstocche <mstocche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:01:44 by mstocche          #+#    #+#             */
-/*   Updated: 2023/04/20 14:44:53 by mstocche         ###   ########.fr       */
+/*   Updated: 2023/04/20 18:25:42 by mstocche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 int	ft_strlen(const char *str)
 {
@@ -25,20 +24,20 @@ int	ft_strlen(const char *str)
 	return (i);
 }
 
-int    in_str(char *s, int c)
+int	in_str(char *s, int c)
 {
-    int    i;
+	int	i;
 
-    i = 0;
-    if (!s)
-        return (0);
-    while (s[i] != '\0')
-    {
-        if (s[i] == (char) c)
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i] != '\0')
+	{
+		if (s[i] == (char) c)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 char	*ft_strjoin(char *s1, char *s2)

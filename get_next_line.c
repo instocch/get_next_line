@@ -6,13 +6,11 @@
 /*   By: mstocche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:30:38 by mstocche          #+#    #+#             */
-/*   Updated: 2023/04/13 16:50:14 by mstocche         ###   ########.fr       */
+/*   Updated: 2023/04/20 18:30:52 by mstocche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#include <stdio.h>
 
 char	*ft_next(char *buffer)
 {
@@ -20,24 +18,24 @@ char	*ft_next(char *buffer)
 	int		j;
 	char	*line;
 
-    if (buffer[0] == '\0')
-    {
-        free(buffer);
-        return (NULL);
-    }
-    i = 0;
+	if (buffer[0] == '\0')
+	{
+		free(buffer);
+		return (NULL);
+	}
+	i = 0;
 	while (buffer[i] != '\0' && buffer[i] != '\n')
 		i++;
 	line = (char *)malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
 	if (!line)
 		return (NULL);
-    if (buffer[i] != '\0')
-        i++;
+	if (buffer[i] != '\0')
+		i++;
 	j = 0;
 	while (buffer[i] != '\0')
 		line[j++] = buffer[i++];
 	line[j] = '\0';
-    free(buffer);
+	free (buffer);
 	return (line);
 }
 
@@ -59,9 +57,9 @@ char	*ft_line(char *buffer)
 		i++;
 	}
 	if (buffer[i] == '\n')
-    {
-        line[i] = buffer[i];
-        i++;
+	{
+		line[i] = buffer[i];
+	   	i++;
     }
     line[i] = '\0';
 	return (line);
